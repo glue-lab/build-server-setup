@@ -7,3 +7,6 @@
 
 # Terraform variable values
 terraform.tfvars
+
+# Temporary/scratch files
+tmp
