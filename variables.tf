@@ -18,3 +18,13 @@ variable "instance_name" {
   description = "The name to associate with this build server"
   type        = string
 }
+
+variable "key_name" {
+  description = "The name of the AWS EC2 key pair to use for SSH access"
+  type        = string
+}
+
+variable "my_public_ip" {
+  description = "Your public IP address with CIDR suffix (ex. /32)"
+  type        = string
+}
