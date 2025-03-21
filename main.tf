@@ -2,14 +2,14 @@
 
 provider "aws" {
   region = "us-east-2"
-  profile = "work"
+  profile = var.aws_profile
 }
 
 resource "aws_instance" "build_server" {
-  ami           = "ami-04f167a56786e4b09"
-  instance_type = "t2.micro"
+  ami           = var.instance_ami
+  instance_type = var.instance_type
 
   tags = {
-    Name = "BuildServer"
+    Name = var.instance_name
   }
 }

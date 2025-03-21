@@ -4,3 +4,6 @@
 
 # Terraform working directory
 .terraform
+
+# Terraform variable values
+terraform.tfvars
