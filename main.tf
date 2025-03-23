@@ -5,6 +5,9 @@ provider "aws" {
   profile = var.aws_profile
 }
 
+provider "random" {
+}
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -30,10 +33,31 @@ resource "aws_security_group" "build_server_access" {
   }
 }
 
+data "aws_subnets" "default_vpc_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+resource "random_integer" "pick" {
+  min = 0
+  max = length(data.aws_subnets.default_vpc_subnets.ids) - 1
+}
+
+locals {
+  selected_subnet_id = element(data.aws_subnets.default_vpc_subnets.ids, random_integer.pick.result)
+}
+
+data "aws_subnet" "selected" {
+  id = local.selected_subnet_id
+}
+
 resource "aws_instance" "build_server" {
   ami           = var.instance_ami
   instance_type = var.instance_type
   key_name      = var.key_name
+  subnet_id     = data.aws_subnet.selected.id
   vpc_security_group_ids = [aws_security_group.build_server_access.id]
 
   tags = {
@@ -42,7 +66,7 @@ resource "aws_instance" "build_server" {
 }
 
 resource "aws_ebs_volume" "data_drive" {
-  availability_zone = aws_instance.build_server.availability_zone
+  availability_zone = data.aws_subnet.selected.availability_zone
   snapshot_id       = var.snapshot_id
   size              = var.data_drive_size
 
