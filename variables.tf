@@ -28,3 +28,13 @@ variable "my_public_ip" {
   description = "Your public IP address with CIDR suffix (ex. /32)"
   type        = string
 }
+
+variable "snapshot_id" {
+  description = "ID of snapshot to initialize the data drive from"
+  type        = string
+}
+
+variable "data_drive_size" {
+  description = "Size of the data drive in gigabytes (GB)"
+  type        = number
+}

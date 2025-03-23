@@ -41,6 +41,22 @@ resource "aws_instance" "build_server" {
   }
 }
 
+resource "aws_ebs_volume" "data_drive" {
+  availability_zone = aws_instance.build_server.availability_zone
+  snapshot_id       = var.snapshot_id
+  size              = var.data_drive_size
+
+  tags = {
+    Name = "${var.instance_name}-data"
+  }
+}
+
+resource "aws_volume_attachment" "data_drive_attachment" {
+  device_name = "/dev/sdf"
+  volume_id   = aws_ebs_volume.data_drive.id
+  instance_id  = aws_instance.build_server.id
+}
+
 output "instance_public_ip" {
   description = "Public IP of the build server"
   value       = aws_instance.build_server.public_ip
