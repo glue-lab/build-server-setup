@@ -60,6 +60,28 @@ resource "aws_instance" "build_server" {
   subnet_id     = data.aws_subnet.selected.id
   vpc_security_group_ids = [aws_security_group.build_server_access.id]
 
+  user_data = <<-EOF
+              #!/bin/bash
+
+              # Capture standard out and standard error
+              exec > /var/log/user-data.log 2>&1
+
+              # Fail on error
+              set -eux
+
+              # Identify data drive by volume ID
+              DATA_VOLUME_ID="${aws_ebs_volume.data_drive.id}"
+              DEVICE_PATH="/dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_$${DATA_VOLUME_ID//-/}_1"
+
+              # Mount this drive to /var/lib/postgresql, adding to /etc/fstab for stop/start
+              mkdir -p /var/lib/postgresql
+              echo "$${DEVICE_PATH} /var/lib/postgresql ext4 defaults,nofail 0 2" >> /etc/fstab
+              mount -a
+
+              # Ensure the drive is using all available space
+              resize2fs "$${DEVICE_PATH}"
+              EOF
+
   tags = {
     Name = var.instance_name
   }
