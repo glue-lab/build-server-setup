@@ -38,3 +38,13 @@ variable "data_drive_size" {
   description = "Size of the data drive in gigabytes (GB)"
   type        = number
 }
+
+variable "db_server_sg_id" {
+  description = "The ID of the DB server's security group"
+  type        = string
+}
+
+variable "db_server_public_ip" {
+  description = "The DB server's public IP address"
+  type        = string
+}

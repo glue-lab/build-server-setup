@@ -103,6 +103,20 @@ resource "aws_volume_attachment" "data_drive_attachment" {
   instance_id  = aws_instance.build_server.id
 }
 
+data "aws_security_group" "db_server" {
+  id = var.db_server_sg_id
+}
+
+resource "aws_security_group_rule" "allow_ssh_from_instance" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["${aws_instance.build_server.public_ip}/32"]
+  security_group_id = data.aws_security_group.db_server.id
+  description       = var.instance_name
+}
+
 output "instance_public_ip" {
   description = "Public IP of the build server"
   value       = aws_instance.build_server.public_ip
