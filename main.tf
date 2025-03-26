@@ -18,11 +18,19 @@ resource "aws_security_group" "build_server_access" {
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    description = "Build server owner"
+    description = "Build server owner - SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_public_ip]
+    cidr_blocks = ["${var.my_public_ip}/32"]
+  }
+
+  ingress {
+    description = "Build server owner - PostgreSQL"
+    from_port   = var.db_port
+    to_port     = var.db_port
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_public_ip}/32"]
   }
 
   egress {

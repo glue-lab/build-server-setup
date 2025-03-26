@@ -48,3 +48,8 @@ variable "db_server_public_ip" {
   description = "The DB server's public IP address"
   type        = string
 }
+
+variable "db_port" {
+  description = "The port that the database is listening on"
+  type        = number
+}
