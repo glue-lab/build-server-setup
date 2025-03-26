@@ -6,7 +6,7 @@
 .terraform
 
 # Terraform variable values
-terraform.tfvars
+*.tfvars
 
 # Temporary/scratch files
 tmp
