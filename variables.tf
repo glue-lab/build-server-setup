@@ -25,7 +25,7 @@ variable "key_name" {
 }
 
 variable "my_public_ip" {
-  description = "Your public IP address with CIDR suffix (ex. /32)"
+  description = "Your public IP address"
   type        = string
 }
 
@@ -41,11 +41,6 @@ variable "data_drive_size" {
 
 variable "db_server_sg_id" {
   description = "The ID of the DB server's security group"
-  type        = string
-}
-
-variable "db_server_public_ip" {
-  description = "The DB server's public IP address"
   type        = string
 }
 
