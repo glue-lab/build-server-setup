@@ -98,6 +98,9 @@ resource "aws_instance" "build_server" {
               # Start a GitLab Runner
               screen -dmS gitlab gitlab-runner run
 
+              # Restart PostgreSQL instance
+              docker container restart gitlab-postgres
+
               UBUNTU
               EOF
 
