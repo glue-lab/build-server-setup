@@ -88,6 +88,17 @@ resource "aws_instance" "build_server" {
 
               # Ensure the drive is using all available space
               resize2fs "$${DEVICE_PATH}"
+
+              # Perform some actions as user ubuntu
+              sudo -u ubuntu bash <<UBUNTU
+
+              # Read in data volume from snapshot (initialize it faster)
+              screen -dmS disk-init sudo dd if=$${DEVICE_PATH} of=/dev/null bs=1M
+
+              # Start a GitLab Runner
+              screen -dmS gitlab gitlab-runner run
+
+              UBUNTU
               EOF
 
   tags = {
